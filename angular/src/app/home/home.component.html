@@ -1,0 +1,150 @@
+<div
+  class="container py-5"
+  style="background: linear-gradient(to right, #e0eafc, #cfdef3); min-height: 100vh"
+>
+  <div class="card shadow-lg p-4 rounded-4 bg-white bg-opacity-75">
+    <!-- 🧾 Header -->
+    <div
+      class="card-header text-center bg-gradient rounded-3 mb-4"
+      style="background: linear-gradient(135deg, #667eea, #764ba2)"
+    >
+      <h3 class="text-dark mb-0">📝 My Abstract Todo List</h3>
+    </div>
+
+    <!-- ➕ Add Todo Form -->
+    <form class="row g-3 align-items-center mb-4" (ngSubmit)="create()">
+      <div class="col-md-4">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Enter a new todo..."
+          name="NewTodoText"
+          [(ngModel)]="newTodoItem"
+          required
+        />
+      </div>
+      <div class="col-md-4">
+        <select class="form-select" name="NewTodoCategory" [(ngModel)]="newTodoCategory" required>
+          <option value="" disabled selected>Select Category</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+      <div class="col-md-4 d-grid">
+        <button class="btn btn-success w-100" type="submit">➕ Add Todo</button>
+      </div>
+    </form>
+
+    <!-- 🔍 Filters -->
+    <div class="d-flex justify-content-center gap-2 flex-wrap mb-4">
+      <button class="btn btn-outline-dark rounded-pill px-4" (click)="showAll()">
+        🌐 Show All
+      </button>
+      <button class="btn btn-outline-success rounded-pill px-4" (click)="showCompleted()">
+        ✅ Completed
+      </button>
+      <button class="btn btn-outline-danger rounded-pill px-4" (click)="showNotCompleted()">
+        🚧 Not Completed
+      </button>
+    </div>
+
+    <!-- 📊 Progress Bar -->
+    <div class="mb-4">
+      <label class="form-label fw-bold">Progress: {{ completionPercentage }}%</label>
+      <div class="progress">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          [style.width.%]="completionPercentage"
+          [ngClass]="{
+            'bg-success': completionPercentage === 100,
+            'bg-info': completionPercentage < 100 && completionPercentage > 0,
+            'bg-secondary': completionPercentage === 0
+          }"
+        >
+          {{ completionPercentage }}%
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ Todo List -->
+    <ul class="list-group" cdkDropList (cdkDropListDropped)="drop($event)">
+      <li
+        *ngFor="let todo of todoItems"
+        class="list-group-item d-flex justify-content-between align-items-center"
+        cdkDrag
+      >
+        <div class="d-flex align-items-center gap-3">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            [checked]="todo.isCompleted"
+            (change)="toggleComplete(todo)"
+          />
+          <span [class.text-decoration-line-through]="todo.isCompleted">
+            {{ todo.text }}
+          </span>
+          <span *ngIf="todo.category" class="badge bg-secondary text-light"
+            >#{{ todo.category }}</span
+          >
+        </div>
+        <div class="btn-group btn-group-sm">
+          <button class="btn btn-outline-primary" (click)="openUpdateModal(todo)">✏️</button>
+          <button class="btn btn-outline-danger" (click)="delete(todo.id)">🗑️</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ✏️ Update Todo Modal -->
+<div
+  class="modal fade"
+  id="updateModal"
+  tabindex="-1"
+  aria-labelledby="updateModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form (ngSubmit)="confirmUpdate()">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="updateModalLabel">✏️ Edit Todo</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="editableText" class="form-label">Todo Text</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="editableText"
+              name="editableText"
+              id="editableText"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="editableCategory" class="form-label">Category</label>
+            <select
+              class="form-select"
+              [(ngModel)]="editableCategory"
+              name="editableCategory"
+              id="editableCategory"
+            >
+              <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit">💾 Save</button>
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+#TodoList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#TodoList li {
+  padding: 5px;
+  margin: 5px 0px;
+  border: 1px solid #ccc;
+  background-color: #f5f5f5;
+}
+
+#TodoList li i {
+  opacity: 0.5;
+}
+
+#TodoList li i:hover {
+  opacity: 1;
+  cursor: pointer;
+  color: #FF0000;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  transition: 0.2s ease-in-out;
+}
+
+input::placeholder {
+  font-style: italic;
+  color: #999;
+}
+
+
+[cdkDrag] {
+  cursor: move;
+  user-select: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 5px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
